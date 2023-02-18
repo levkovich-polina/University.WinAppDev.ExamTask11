@@ -44,12 +44,8 @@ namespace Task11
         List<Square> _squares = new List<Square>();
         private Timer _timer;
         Random _random = new Random();
-        int _positionPlayerX;
-        int _positionPlayerY;
         Player _player;
         List<int> _listPositionX = new List<int>();
-        int _positionX;
-        int _positionY;
         private const int _gameFieldSize = 30;
 
         public Form1()
@@ -59,12 +55,8 @@ namespace Task11
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
-            Panel.CreateGraphics().Clear(Color.White);
             _squares.Clear();
-            _positionPlayerX = 15;
-            _positionPlayerY = 30;
-
-            _player = new Player(_positionPlayerX, _positionPlayerY, 1, 1, Color.Red);
+            _player = new Player(15, 30, 1, 1, Color.Red);
 
             TimerCallback tm = new TimerCallback(OnTimerTicked);
             _timer = new Timer(tm, 0, 0, 200);
@@ -85,7 +77,7 @@ namespace Task11
             {
                 for (int i = 0; i < _squares.Count; i++)
                 {
-                    if (_player.PositionPlayerY - 1 == _squares[i].PositionY && _player.PositionPlayerX <= _squares[i].PositionX && _squares[i].PositionX <= (_player.PositionPlayerX + _player.Width - 1))
+                    if (_player.PositionPlayerY  == _squares[i].PositionY && _player.PositionPlayerX <= _squares[i].PositionX && _squares[i].PositionX <= (_player.PositionPlayerX + _player.Width - 1))
                     {
                         _timer.Dispose();
                         MessageBox.Show("Вы врезались в огорождение! Игра окончена.");
@@ -99,12 +91,9 @@ namespace Task11
                     _squares[i].PositionY++;
                 }
             }
-            _positionY = 0;
             for (int i = 0; i < _listPositionX.Count; i++)
             {
-                _positionX =  _listPositionX[i];
-
-                Square square = new Square(_positionX, _positionY, 1, 1, Color.Gray);
+                Square square = new Square(_listPositionX[i], 0, 1, 1, Color.Gray);
                 _squares.Add(square);
             }
             Draw();
@@ -112,8 +101,8 @@ namespace Task11
 
         private void Draw()
         {
-            Panel.CreateGraphics().Clear(Color.White);
             Graphics g = Panel.CreateGraphics();
+            g.Clear(Color.White);
             int width = Panel.ClientSize.Width / _gameFieldSize;
             int height = Panel.ClientSize.Height / _gameFieldSize;
             for (int i = 0; i < _squares.Count; i++)
@@ -125,8 +114,6 @@ namespace Task11
                 var brush = _squares[i].Color;
                 Invoke(() =>
                 {
-                    g.FillRectangle(new SolidBrush(Color.White), dx, dy - height, dWidth, dHeight);
-
                     g.FillRectangle(new SolidBrush(brush), dx, dy, dWidth, dHeight);
                 });
             }
